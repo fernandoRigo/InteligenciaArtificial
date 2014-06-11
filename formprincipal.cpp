@@ -36,10 +36,10 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
         qDebug() << "Falha ao abrir a porta";
     }
 
-    connect(this,SIGNAL(atualizaTemperatura(double,double, char)),formTemperatura,SLOT(atualizaGrafico(double,double,char)));
-    connect(this,SIGNAL(atualizaTensao(double,double, char)),formTensao,SLOT(atualizaGrafico(double,double,char)));
-    connect(this,SIGNAL(atualizaRotacao(double,double,char)),formRotacao,SLOT(atualizaGrafico(double,double,char)));
-    connect(this,SIGNAL(atualizaPotencia(double,double,char)),formPotencia,SLOT(atualizaGrafico(double,double,char)));
+    connect(this,SIGNAL(atualizaTemperatura(double,double)),formTemperatura,SLOT(atualizaGrafico(double,double)));
+    connect(this,SIGNAL(atualizaTensao(double,double)),formTensao,SLOT(atualizaGrafico(double,double)));
+    connect(this,SIGNAL(atualizaRotacao(double,double)),formRotacao,SLOT(atualizaGrafico(double,double)));
+    connect(this,SIGNAL(atualizaPotencia(double,double)),formPotencia,SLOT(atualizaGrafico(double,double)));
     connect(atualizaSensores,SIGNAL(timeout()),this,SLOT(leDados()));
     update();
 }
@@ -183,14 +183,14 @@ void FormPrincipal::leDados(){
     int posTemperatura  = 0;
     int posRPM          = 0;
 
-//    INT16 testa = 5;
+//    INT16 testa = 15;
 
 
 //    char low1 = (char)testa;
 //    char high1 = testa >> 8;
 
 //    dados[0] =  '[';
-//    dados[1] =  'P';
+//    dados[1] =  'T';
 //    dados[2] =  'A';
 //    dados[3] =  ',';
 //    dados[4] =  low1;
@@ -221,7 +221,7 @@ void FormPrincipal::leDados(){
         valor = (high<<8) | low;
         this->rtTensao = valor*(5.0/1023.0)*2.0;
 
-        emit atualizaTensao(this->rtTensao,1.0,sensorAtual);
+        emit atualizaTensao(this->rtTensao,1.0);
 
         //CORRENTE
         if (dados[posPotencia + 5] =='#') {
@@ -236,18 +236,19 @@ void FormPrincipal::leDados(){
             high = dados[posPotencia + 6];
         }
 
-        valor = low|(high<<8);
+        valor = (high<<8) | low;
 
         this->rtCorrente = valor*(5.0/1023.0);
         this->rtCorrente = this->rtCorrente/10.0;
         this->rtCorrente = this->rtCorrente/12.5;
 
-        emit atualizaCorrente(this->rtCorrente,1.0,sensorAtual);
+        emit atualizaCorrente(this->rtCorrente,1.0
+                              );
 
         //POTENCIA
         this->rtPotencia = this->rtTensao * this->rtCorrente;
 
-        emit atualizaPotencia(this->rtPotencia ,1.0,sensorAtual);
+        emit atualizaPotencia(this->rtPotencia ,1.0);
     }
 
     //TEMPERATURA
@@ -264,11 +265,11 @@ void FormPrincipal::leDados(){
         } else {
             high = dados[posTemperatura+4];
         }
-        valor = low|(high<<8);
+        valor = (high<<8) | low;
         this->rtTemperatura = (5.0 * valor * 100.0 / 1023.0);
         sensorAtual = dados[posTemperatura+1];
 
-        emit atualizaTemperatura(rtTemperatura,1.0,sensorAtual);
+        emit atualizaTemperatura(rtTemperatura,1.0);
     }
 
     //RPM
@@ -285,11 +286,11 @@ void FormPrincipal::leDados(){
         } else {
             high = dados[posRPM+4];
         }
-        this->rtRotacao = low|(high<<8);
+        this->rtRotacao = (high<<8) | low;;
 
         sensorAtual = dados[posRPM+1];
 
-        emit atualizaRotacao(posRPM,1.0,sensorAtual);
+        emit atualizaRotacao(rtRotacao,1.0);
     }
     update();
 }

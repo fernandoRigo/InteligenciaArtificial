@@ -30,5 +30,5 @@ private:
 signals:
 
 public slots:
-    void atualizaGrafico(double x, double y,char c);
+    void atualizaGrafico(double y,double x);
 };

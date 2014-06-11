@@ -39,11 +39,11 @@ private:
     QTimer * atualizaTela;
 
 signals:
-    void atualizaTemperatura(double x, double y, char c);
-    void atualizaPotencia(double x, double y, char c);
-    void atualizaCorrente(double x, double y, char c);
-    void atualizaRotacao(double x, double y, char c);
-    void atualizaTensao(double x, double y, char c);
+    void atualizaTemperatura(double x, double y);
+    void atualizaPotencia(double x, double y);
+    void atualizaCorrente(double x, double y);
+    void atualizaRotacao(double x, double y);
+    void atualizaTensao(double x, double y);
 
 public slots:
     void leDados();

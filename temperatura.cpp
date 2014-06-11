@@ -31,21 +31,19 @@ temperatura::temperatura(QWidget *parent) :
     this->setLayout(lHLayout);
 }
 
-void temperatura::atualizaGrafico(double x,double y,char c) {
-    this->edSensorAtual->display(c);
+void temperatura::atualizaGrafico(double y, double x) {
 
-    if(x > maiorTemperatura)
-        maiorTemperatura = x;
+
+    if(y > maiorTemperatura)
+        maiorTemperatura = y;
 
     if(yAxis.isEmpty())
-        yAxis << y;
+        yAxis << x;
     else
-        yAxis << (y+(yAxis.last()));
-    xAxis << x;
+        yAxis << (x+(yAxis.last()));
+    xAxis << y;
 
-
-
-    customPlot->graph(0)->setData(xAxis, yAxis);
+    customPlot->graph(0)->setData(yAxis,xAxis);
     customPlot->yAxis->setLabel("Temperatura");
     customPlot->yAxis->setRange(0, maiorTemperatura);
     customPlot->xAxis->setRange(0,yAxis.last());
