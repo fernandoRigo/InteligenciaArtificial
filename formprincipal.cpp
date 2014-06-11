@@ -240,10 +240,9 @@ void FormPrincipal::leDados(){
 
         this->rtCorrente = valor*(5.0/1023.0);
         this->rtCorrente = this->rtCorrente/10.0;
-        this->rtCorrente = this->rtCorrente/12.5;
+        this->rtCorrente = ((this->rtCorrente/12.5)*1000);
 
-        emit atualizaCorrente(this->rtCorrente,1.0
-                              );
+        emit atualizaCorrente(this->rtCorrente,1.0);
 
         //POTENCIA
         this->rtPotencia = this->rtTensao * this->rtCorrente;
