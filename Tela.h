@@ -1,7 +1,8 @@
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QVBoxLayout>
 #include <QObject>
 #include <QList>
+#include <QLabel>
 #include <QTimer>
 #include "Serial.h"
 class Tela : public QWidget {
@@ -11,8 +12,9 @@ class Tela : public QWidget {
 private:
     QComboBox * portasDisponiveis;
     Serial * portas;
-    QHBoxLayout * principal;
+    QVBoxLayout * principal;
     QTimer * fechaTela;
+    QLabel * lbDescricao;
 
 public:
     Tela();
