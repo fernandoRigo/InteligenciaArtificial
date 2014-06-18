@@ -24,7 +24,8 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     this->atualizaSensores = new QTimer();
     atualizaSensores->start(800);
     this->atualizaTela = new QTimer();
-    portaSelecionada.setPortName("/dev/ttyUSB1");
+    qDebug()<<port.portName();
+    portaSelecionada.setPortName(port.portName());
     if(portaSelecionada.open(QIODevice::ReadWrite) ) {
         bool sucess = portaSelecionada.setBaudRate(QSerialPort::Baud38400) &
                 portaSelecionada.setStopBits(QSerialPort::OneStop) &
@@ -154,7 +155,6 @@ bool ehRotacao(int x, int y){
         return false;
     }
 }
-
 
 void FormPrincipal::mousePressEvent(QMouseEvent *e){
     QMainWindow::mousePressEvent(e);
