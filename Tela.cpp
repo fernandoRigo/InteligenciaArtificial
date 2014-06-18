@@ -14,9 +14,9 @@ Tela::Tela() {
     fechaTela         = new QTimer();
 
     QList <QString> dialog = portas->listaPortas();
-    dialog.push_back("");
+    dialog.push_front("");
 
-    for(int i = dialog.size() -1 ; i >= 0 ; i--) {
+    for(int i = 0 ; i < dialog.size(); i++) {
         portasDisponiveis->addItem(dialog.at(i));
     }
 

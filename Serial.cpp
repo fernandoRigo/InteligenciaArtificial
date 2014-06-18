@@ -21,14 +21,14 @@ QList<QString> Serial::listaPortas() {
 }
 
 void Serial::selecionaPorta(int porta) {
-    portaSelecionada.setPort(listaDePortasSeriais.at(porta));
+    portaSelecionada.setPort(listaDePortasSeriais.at(porta-1));
     portaSelecionada.setBaudRate(QSerialPort::Baud38400);
     portaSelecionada.setDataBits(QSerialPort::Data8);
     portaSelecionada.setParity(QSerialPort::NoParity);
     portaSelecionada.setStopBits(QSerialPort::OneStop);
     if (portaSelecionada.open(QIODevice::ReadWrite)) {
         portaSelecionada.close();
-        principal = new FormPrincipal(listaDePortasSeriais.at(porta));
+        principal = new FormPrincipal(listaDePortasSeriais.at(porta-1));
         mostraTela = true;
         principal->show();
     }
