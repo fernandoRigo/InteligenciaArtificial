@@ -285,8 +285,12 @@ void FormPrincipal::leDados(){
         } else {
             high = dados[posRPM+4];
         }
-        this->rtRotacao = (high<<8) | low;;
 
+        float rpmTemp = (high<<8) | low;;
+
+        if (rpmTemp >= 0 && rpmTemp < 1500) {
+            this->rtRotacao = rpmTemp;
+        }
         sensorAtual = dados[posRPM+1];
 
         emit atualizaRotacao(rtRotacao,1.0);
