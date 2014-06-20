@@ -22,7 +22,7 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     this->rtTensao      = 0;
 
     this->atualizaSensores = new QTimer();
-    atualizaSensores->start(800);
+    atualizaSensores->start(100);
     this->atualizaTela = new QTimer();
     qDebug()<<port.portName();
     portaSelecionada.setPortName(port.portName());
@@ -64,7 +64,7 @@ void FormPrincipal::paintEvent(QPaintEvent *e){
 
     //VALORES EM TEMPO REAL
     painter.setPen(Qt::lightGray);
-    painter.drawRect(10,15,200,100);
+    painter.drawRect(10,15,240,100);
 
     QString s = "Valores Em Tempo Real";
     QString x;
@@ -76,19 +76,19 @@ void FormPrincipal::paintEvent(QPaintEvent *e){
     painter.drawText(15,30,s);
 
     painter.setPen(Qt::yellow); //Tensão
-    x.setNum(rtTensao);
+    x.setNum(rtTensao, 'f', 2);
     s = "Tensão do Motor: ";
     s.append(x);
     painter.drawText(15,50,s);
 
     painter.setPen(Qt::red); //Temperatura
-    x.setNum(rtTemperatura);
+    x.setNum(rtTemperatura, 'f', 2);
     s = "Temperatura da turbina: ";
     s.append(x);
     painter.drawText(15,70,s);
 
     painter.setPen(Qt::white); //Potencia
-    x.setNum(rtPotencia);
+    x.setNum(rtPotencia, 'f', 2);
     s = "Potência do Motor: ";
     s.append(x);
     painter.drawText(15,90,s);
@@ -174,7 +174,7 @@ void FormPrincipal::mousePressEvent(QMouseEvent *e){
 }
 
 void FormPrincipal::leDados(){
-    QByteArray dados = portaSelecionada.read(30);
+    QByteArray dados = portaSelecionada.readAll();
     unsigned char low;
     unsigned char high;
     int16_t valor;
@@ -285,8 +285,12 @@ void FormPrincipal::leDados(){
         } else {
             high = dados[posRPM+4];
         }
-        this->rtRotacao = (high<<8) | low;;
 
+        float rpmTemp = (high<<8) | low;;
+
+        if (rpmTemp >= 0 && rpmTemp < 1500) {
+            this->rtRotacao = rpmTemp;
+        }
         sensorAtual = dados[posRPM+1];
 
         emit atualizaRotacao(rtRotacao,1.0);
