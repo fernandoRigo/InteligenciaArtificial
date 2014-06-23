@@ -5,7 +5,7 @@
 FormPrincipal::FormPrincipal(QSerialPortInfo port)
 
 {
-    QString filename = ":/new/img/usina-eolica-turbina-eolica-energia-eolica_yubqha.jpg";
+    QString filename = ":/new/img/0_gerador_eolico_detalhe_alternador.png";
 
     this->image = new QImage(filename);
     this->formTemperatura = new temperatura();
@@ -13,8 +13,8 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     this->formRotacao = new rotacao();
     this->formTensao = new tensao();
 
-    this->setFixedHeight(image->height());
-    this->setFixedWidth(image->width());
+    this->setWindowState(Qt::WindowMaximized);
+    //this->setFixedWidth(image->width());
 
     this->rtPotencia    = 0;
     this->rtRotacao     = 0;
@@ -54,22 +54,22 @@ void FormPrincipal::paintEvent(QPaintEvent *e){
 
     painter.drawImage(QPoint(0,0), *image);
     painter.setPen(Qt::green); //Rotação
-    painter.drawRect(425,265,10,20);
-    painter.setPen(Qt::yellow); //Potencia
-    painter.drawRect(265,275,10,20);
+    painter.drawRect(768,380,10,20);
+    painter.setPen(Qt::white); //Potencia
+    painter.drawRect(700,380,10,20);
     painter.setPen(Qt::red); //Temperatura
-    painter.drawRect(345,270,10,20);
-    painter.setPen(Qt::white); //Tensão
-    painter.drawRect(320,330,10,20);
+    painter.drawRect(640,380,10,20);
+    painter.setPen(Qt::yellow); //Tensão
+    painter.drawRect(85,340,10,20);
 
     //VALORES EM TEMPO REAL
-    painter.setPen(Qt::lightGray);
+    painter.setPen(Qt::black);
     painter.drawRect(10,15,240,100);
 
     QString s = "Valores Em Tempo Real";
     QString x;
     painter.drawText(15,10,s);
-    painter.setPen(Qt::green); //Rotação
+    painter.setPen(Qt::darkGreen); //Rotação
     x.setNum(rtRotacao);
     s = "Rotação da turbina: ";
     s.append(x);
@@ -96,33 +96,33 @@ void FormPrincipal::paintEvent(QPaintEvent *e){
 
     //LEGENDA
     s = "Legenda";
-    painter.setPen(Qt::lightGray);
-    painter.drawText(10,400,s);
+    painter.setPen(Qt::black);
+    painter.drawText(10,600,s);
 
-    painter.setPen(Qt::green); //Rotação
-    painter.drawRect(10,405,10,20);
+    painter.setPen(Qt::darkGreen); //Rotação
+    painter.drawRect(10,605,10,20);
     s = "Rotação Do Motor";
-    painter.drawText(25,417,s);
+    painter.drawText(25,617,s);
 
     painter.setPen(Qt::white); //Tensão
-    painter.drawRect(10,427,10,20);
+    painter.drawRect(10,627,10,20);
     s = "Potência Do Motor";
-    painter.drawText(25,439,s);
+    painter.drawText(25,639,s);
 
     painter.setPen(Qt::red); //Temperatura
-    painter.drawRect(10,450,10,20);
+    painter.drawRect(10,650,10,20);
     s = "Temperatura Da Turbina";
-    painter.drawText(25,462,s);
+    painter.drawText(25,662,s);
 
     painter.setPen(Qt::yellow); //Potencia
-    painter.drawRect(10,473,10,20);
+    painter.drawRect(10,673,10,20);
     s = "Tensão Do Circuito";
-    painter.drawText(25,485,s);
+    painter.drawText(25,685,s);
 }
 
 bool ehTemperatura(int x, int y){
-    if ((x >= 345 && x <=375)
-            && (y >= 270&& y <= 280)) {
+    if ((x >= 640 && x <=650)
+            && (y >= 380&& y <= 410)) {
         return true;
     } else {
         return false;
@@ -130,8 +130,8 @@ bool ehTemperatura(int x, int y){
 }
 
 bool ehTensao(int x, int y){
-    if ((x >= 265 && x <=285)
-            && (y >= 275&& y <= 295)) {
+    if ((x >= 85 && x <=95)
+            && (y >= 340&& y <= 360)) {
         return true;
     } else {
         return false;
@@ -139,8 +139,8 @@ bool ehTensao(int x, int y){
 }
 
 bool ehPotencia(int x, int y){
-    if ((x >= 320 && x <=340)
-            && (y >= 330&& y <= 350)) {
+    if ((x >= 700 && x <=710)
+            && (y >= 380&& y <= 400)) {
         return true;
     } else {
         return false;
@@ -148,8 +148,8 @@ bool ehPotencia(int x, int y){
 }
 
 bool ehRotacao(int x, int y){
-    if ((x >= 425 && x <=445)
-            && (y >= 265&& y <= 285)) {
+    if ((x >= 768 && x <=778)
+            && (y >= 380&& y <= 400)) {
         return true;
     } else {
         return false;
@@ -189,18 +189,23 @@ void FormPrincipal::leDados(){
 //    char low1 = (char)testa;
 //    char high1 = testa >> 8;
 
-//    dados[0] =  '[';
-//    dados[1] =  'T';
-//    dados[2] =  'A';
-//    dados[3] =  ',';
-//    dados[4] =  low1;
-//    dados[5] =  high1;
-//    dados[6] =  ']';
+//   dados[0] =  '[';
+//   dados[1] =  'm';
+//   dados[2] =  ',';
+//   dados[3] =  'A';
+//   dados[4] =  'l';
+//   dados[5] =  '1';
+//   dados[6] =  ']';
 
 
     posPotencia     = dados.indexOf('P');
     posTemperatura  = dados.indexOf('T');
     posRPM          = dados.indexOf('R');
+
+    //MENSAGEM
+    if (dados.startsWith("[m,")) {
+        //Mostrar mensagem
+    }
 
     //POTENCIA, TENSAO, CORRENTE
     if (posPotencia != -1){
@@ -238,9 +243,10 @@ void FormPrincipal::leDados(){
 
         valor = (high<<8) | low;
 
+
         this->rtCorrente = valor*(5.0/1023.0);
         this->rtCorrente = this->rtCorrente/10.0;
-        this->rtCorrente = ((this->rtCorrente/12.5)*1000);
+        this->rtCorrente = ((this->rtCorrente/2.5)*1000);
 
         emit atualizaCorrente(this->rtCorrente,1.0);
 
