@@ -3,6 +3,7 @@
 #include "potencia.h"
 #include "tensao.h"
 #include "rotacao.h"
+#include "Erro.h"
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QMainWindow>
@@ -37,6 +38,7 @@ class FormPrincipal :public QMainWindow
 private:
     QTimer * atualizaSensores;
     QTimer * atualizaTela;
+    Erro * mensagem;
 
 signals:
     void atualizaTemperatura(double x, double y);

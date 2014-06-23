@@ -12,7 +12,7 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     this->formPotencia = new potencia();
     this->formRotacao = new rotacao();
     this->formTensao = new tensao();
-
+    this->mensagem = new Erro();
     this->setWindowState(Qt::WindowMaximized);
     //this->setFixedWidth(image->width());
 
@@ -189,14 +189,13 @@ void FormPrincipal::leDados(){
 //    char low1 = (char)testa;
 //    char high1 = testa >> 8;
 
-//   dados[0] =  '[';
-//   dados[1] =  'm';
-//   dados[2] =  ',';
-//   dados[3] =  'A';
-//   dados[4] =  'l';
-//   dados[5] =  '1';
-//   dados[6] =  ']';
-
+   dados[0] =  '[';
+   dados[1] =  'm';
+   dados[2] =  ',';
+   dados[3] =  'A';
+   dados[4] =  'l';
+   dados[5] =  '1';
+   dados[6] =  ']';
 
     posPotencia     = dados.indexOf('P');
     posTemperatura  = dados.indexOf('T');
@@ -205,6 +204,14 @@ void FormPrincipal::leDados(){
     //MENSAGEM
     if (dados.startsWith("[m,")) {
         //Mostrar mensagem
+        QString dialog;
+        int i = 3;
+        while (dados.at(i) != ']') {
+            dialog.insert((i-3),dados.at(i));
+            i++;
+        }
+        mensagem->setMensagem(dialog);
+        mensagem->show();
     }
 
     //POTENCIA, TENSAO, CORRENTE

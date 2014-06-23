@@ -8,7 +8,8 @@ HEADERS += \
     tensao.h \
     rotacao.h \
     Serial.h \
-    Tela.h
+    Tela.h \
+    Erro.h
 
 SOURCES += \
     main.cpp \
@@ -19,7 +20,8 @@ SOURCES += \
     tensao.cpp \
     rotacao.cpp \
     Serial.cpp \
-    Tela.cpp
+    Tela.cpp \
+    Erro.cpp
 
 RESOURCES += \
     Imagens.qrc
