@@ -31,6 +31,7 @@ class FormPrincipal :public QMainWindow
     float rtTensao;
     float rtRotacao;
     float rtCorrente;
+    QString lbMensagem;
 
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
@@ -46,6 +47,7 @@ signals:
     void atualizaCorrente(double x, double y);
     void atualizaRotacao(double x, double y);
     void atualizaTensao(double x, double y);
+    void atualizaSensor(char c);
 
 public slots:
     void leDados();

@@ -14,7 +14,7 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     this->formTensao = new tensao();
     this->mensagem = new Erro();
     this->setWindowState(Qt::WindowMaximized);
-    //this->setFixedWidth(image->width());
+    this->setMinimumSize(image->width(),image->height());
 
     this->rtPotencia    = 0;
     this->rtRotacao     = 0;
@@ -41,6 +41,9 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     connect(this,SIGNAL(atualizaTensao(double,double)),formTensao,SLOT(atualizaGrafico(double,double)));
     connect(this,SIGNAL(atualizaRotacao(double,double)),formRotacao,SLOT(atualizaGrafico(double,double)));
     connect(this,SIGNAL(atualizaPotencia(double,double)),formPotencia,SLOT(atualizaGrafico(double,double)));
+    connect(this,SIGNAL(atualizaSensor(char)),formTemperatura,SLOT(atualizaSensor(char)));
+    connect(this,SIGNAL(atualizaSensor(char)),formRotacao,SLOT(atualizaSensor(char)));
+
     connect(atualizaSensores,SIGNAL(timeout()),this,SLOT(leDados()));
     update();
 }
@@ -118,6 +121,14 @@ void FormPrincipal::paintEvent(QPaintEvent *e){
     painter.drawRect(10,673,10,20);
     s = "Tensão Do Circuito";
     painter.drawText(25,685,s);
+
+    //Mensagem
+    painter.setPen(Qt::red);
+    QFont *fonteGradona = new QFont(QString("Courier"), -1, 14,false);
+    fonteGradona->setPixelSize(20);
+    painter.setFont(*fonteGradona);
+    painter.drawText(290,20,lbMensagem);
+
 }
 
 bool ehTemperatura(int x, int y){
@@ -189,13 +200,13 @@ void FormPrincipal::leDados(){
 //    char low1 = (char)testa;
 //    char high1 = testa >> 8;
 
-   dados[0] =  '[';
-   dados[1] =  'm';
-   dados[2] =  ',';
-   dados[3] =  'A';
-   dados[4] =  'l';
-   dados[5] =  '1';
-   dados[6] =  ']';
+//   dados[0] =  '[';
+//   dados[1] =  'm';
+//   dados[2] =  ',';
+//   dados[3] =  'A';
+//   dados[4] =  'l';
+//   dados[5] =  '1';
+//   dados[6] =  ']';
 
     posPotencia     = dados.indexOf('P');
     posTemperatura  = dados.indexOf('T');
@@ -210,8 +221,7 @@ void FormPrincipal::leDados(){
             dialog.insert((i-3),dados.at(i));
             i++;
         }
-        mensagem->setMensagem(dialog);
-        mensagem->show();
+        lbMensagem = dialog;
     }
 
     //POTENCIA, TENSAO, CORRENTE
@@ -265,7 +275,7 @@ void FormPrincipal::leDados(){
 
     //TEMPERATURA
     if (posTemperatura != -1){
-        // [XA,LH][XA,LH][XA,LHLH]
+        // [TA,LH][XA,LH][XA,LHLH]
         if (dados[posTemperatura+3] =='#') {
             low  = 0x00;
         } else {
@@ -282,6 +292,9 @@ void FormPrincipal::leDados(){
         sensorAtual = dados[posTemperatura+1];
 
         emit atualizaTemperatura(rtTemperatura,1.0);
+
+        //Sensor Atual
+        emit atualizaSensor(dados[posTemperatura+1]);
     }
 
     //RPM
@@ -307,6 +320,10 @@ void FormPrincipal::leDados(){
         sensorAtual = dados[posRPM+1];
 
         emit atualizaRotacao(rtRotacao,1.0);
+
+        //Sensor Atual
+        emit atualizaSensor(dados[posRPM+1]);
+
     }
     update();
 }

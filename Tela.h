@@ -4,6 +4,7 @@
 #include <QList>
 #include <QLabel>
 #include <QTimer>
+#include <QPushButton>
 #include "Serial.h"
 class Tela : public QWidget {
 

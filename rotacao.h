@@ -7,6 +7,7 @@
 #include <QLCDNumber>
 #include <QFrame>
 #include <QTimer>
+#include <QPushButton>
 #include "qcustomplot.h"
 class rotacao : public QFrame
 {
@@ -18,7 +19,7 @@ public:
     QLabel * lbSesorAtual;
     QLCDNumber * edSensorAtual;
     QTimer * timerAtualizaSensores;
-
+    QPushButton *btLimpar;
     QVBoxLayout *lVLayout;
     QHBoxLayout *lHLayout;
     QVector <double> xAxis;
@@ -32,4 +33,6 @@ signals:
 
 public slots:
     void atualizaGrafico(double y,double x);
+    void atualizaSensor(char c);
+    void limpaGrafico();
 };
