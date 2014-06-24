@@ -6,7 +6,7 @@ tensao::tensao(QWidget *parent) :
     this->setFixedHeight(250);
     this->setFixedWidth(700);
     this->setFrameStyle(QFrame::Box);
-    this->setWindowModality(Qt::ApplicationModal);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint);
     this->setWindowTitle("Leitura Da Tensão");
 
     this->lVLayout              = new QVBoxLayout();
