@@ -9,6 +9,7 @@
 #include <QMainWindow>
 #include <QImage>
 #include <QDebug>
+#include <QTimer>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
@@ -31,8 +32,8 @@ class FormPrincipal :public QMainWindow
     float rtTensao;
     float rtRotacao;
     float rtCorrente;
-    QString lbMensagem;
-
+    QList <QTimer *> listTimer;
+    QList <QString> lbMensagem;
     void paintEvent(QPaintEvent *e);
     void mousePressEvent(QMouseEvent *e);
 
@@ -51,4 +52,5 @@ signals:
 
 public slots:
     void leDados();
+    void limpaMensagem();
 };

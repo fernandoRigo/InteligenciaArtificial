@@ -5,6 +5,7 @@
 FormPrincipal::FormPrincipal(QSerialPortInfo port)
 
 {
+
     QString filename = ":/new/img/0_gerador_eolico_detalhe_alternador.png";
 
     this->image = new QImage(filename);
@@ -127,7 +128,9 @@ void FormPrincipal::paintEvent(QPaintEvent *e){
     QFont *fonteGradona = new QFont(QString("Courier"), -1, 14,false);
     fonteGradona->setPixelSize(20);
     painter.setFont(*fonteGradona);
-    painter.drawText(290,20,lbMensagem);
+    if(!lbMensagem.isEmpty()){
+        painter.drawText(290,20,lbMensagem.first());
+    }
 
 }
 
@@ -184,6 +187,13 @@ void FormPrincipal::mousePressEvent(QMouseEvent *e){
     }
 }
 
+void FormPrincipal::limpaMensagem(){
+    listTimer.first()->~QTimer();
+    listTimer.removeFirst();
+    lbMensagem.removeFirst();
+
+}
+
 void FormPrincipal::leDados(){
     QByteArray dados = portaSelecionada.readAll();
     unsigned char low;
@@ -194,20 +204,6 @@ void FormPrincipal::leDados(){
     int posTemperatura  = 0;
     int posRPM          = 0;
 
-//    INT16 testa = 15;
-
-
-//    char low1 = (char)testa;
-//    char high1 = testa >> 8;
-
-//   dados[0] =  '[';
-//   dados[1] =  'm';
-//   dados[2] =  ',';
-//   dados[3] =  'A';
-//   dados[4] =  'l';
-//   dados[5] =  '1';
-//   dados[6] =  ']';
-
     posPotencia     = dados.indexOf('P');
     posTemperatura  = dados.indexOf('T');
     posRPM          = dados.indexOf('R');
@@ -216,12 +212,17 @@ void FormPrincipal::leDados(){
     if (dados.startsWith("[m,")) {
         //Mostrar mensagem
         QString dialog;
+        QTimer *timerAux = new QTimer();
         int i = 3;
         while (dados.at(i) != ']') {
             dialog.insert((i-3),dados.at(i));
             i++;
         }
-        lbMensagem = dialog;
+        connect(timerAux, SIGNAL(timeout()),this,SLOT(limpaMensagem()));
+
+        timerAux->start(5000);
+        listTimer.push_back(timerAux);
+        lbMensagem.push_back(dialog);
     }
 
     //POTENCIA, TENSAO, CORRENTE

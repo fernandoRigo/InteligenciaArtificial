@@ -65,7 +65,7 @@ void temperatura::atualizaGrafico(double y, double x) {
 }
 
 void temperatura::atualizaSensor(char c){
-    this->edSensorAtual->display(c);
+    this->edSensorAtual->display(QString(c));
 }
 
 
