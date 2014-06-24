@@ -13,7 +13,6 @@ FormPrincipal::FormPrincipal(QSerialPortInfo port)
     this->formPotencia = new potencia();
     this->formRotacao = new rotacao();
     this->formTensao = new tensao();
-    this->mensagem = new Erro();
     this->setWindowState(Qt::WindowMaximized);
     this->setMinimumSize(image->width(),image->height());
 

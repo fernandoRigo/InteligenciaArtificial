@@ -39,8 +39,8 @@ rotacao::rotacao(QWidget *parent) :
 
 void rotacao::limpaGrafico(){
     maiorRotacao = 0;
-    customPlot->yAxis->setRange(0,0);
-    customPlot->xAxis->setRange(0,0);
+    yAxis.clear();
+    xAxis.clear();
     customPlot->graph(0)->clearData();
 }
 
